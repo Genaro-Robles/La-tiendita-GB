@@ -32,7 +32,7 @@ export default function Producto() {
             <div className="w-1/2 justify-center items-center flex">
                 <Image
                     src={"/images/products/" + data.image}
-                    alt={data.name}
+                    alt={"Detalle de " + data.name}
                     width={500}
                     height={500}
                 />

@@ -177,7 +177,7 @@ export default function Header() {
                 </nav>
                 <nav
                     className={`bg-white fixed right-0 top-0 h-full w-1/4 shadow-xl transition-all duration-200 flex flex-col ${
-                        mostrarCarrito ? "" : "translate-x-80"
+                        mostrarCarrito ? "" : "translate-x-96"
                     }`}
                 >
                     <button
@@ -195,12 +195,11 @@ export default function Header() {
                         />
                     ))}
                     <div className="flex flex-col items-center">
-                        <button
-                            className="bg-orange-500 text-white py-2 rounded-md hover:bg-orange-600 w-3/4 my-3"
-                            onClick={() => createVenta({clearCart})}
+                        <Link href="/procesarventa"
+                            className="bg-orange-500 text-white py-2 rounded-md hover:bg-orange-600 w-3/4 my-3 text-center"
                         >
                             Realizar compra
-                        </button>
+                        </Link>
                         <button
                             onClick={() => clearCart()}
                             className="bg-black text-white py-2 rounded-md hover:bg-black/75 w-3/4 my-3"

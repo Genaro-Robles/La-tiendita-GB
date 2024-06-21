@@ -1,16 +1,22 @@
-"use client"
+"use client";
 import AdminProducto from "@/components/adminProducto";
 import AdminVentas from "@/components/adminVentas";
 import AdminUsuarios from "@/components/adminUsuarios";
 import AdminCategorias from "@/components/adminCategorias";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { set } from "react-hook-form";
+import AdminCompras from "@/components/adminCompras";
+import AdminProveedores from "@/components/adminProveedores";
 
 export default function AdminPage() {
     const [showAdminProducto, setShowAdminProducto] = useState(false);
     const [showAdminVentas, setShowAdminVentas] = useState(false);
     const [showAdminUsuarios, setShowAdminUsuarios] = useState(false);
     const [showAdminCategorias, setShowAdminCategorias] = useState(false);
+    const [showAdminCompras, setShowAdminCompras] = useState(false);
+    const [showAdminProveedores, setShowAdminProveedores] = useState(false);
+
     const router = useRouter();
 
     const handleShowAdminProducto = () => {
@@ -18,34 +24,62 @@ export default function AdminPage() {
         setShowAdminVentas(false);
         setShowAdminUsuarios(false);
         setShowAdminCategorias(false);
-    }
+        setShowAdminCompras(false);
+        setShowAdminProveedores(false);
+    };
 
     const handleShowAdminVentas = () => {
         setShowAdminProducto(false);
         setShowAdminVentas(true);
         setShowAdminUsuarios(false);
         setShowAdminCategorias(false);
-    }
+        setShowAdminCompras(false);
+        setShowAdminProveedores(false);
+    };
 
     const handleShowAdminUsuarios = () => {
         setShowAdminProducto(false);
         setShowAdminVentas(false);
         setShowAdminUsuarios(true);
         setShowAdminCategorias(false);
-    }
+        setShowAdminCompras(false);
+        setShowAdminProveedores(false);
+    };
 
     const handleShowAdminCategorias = () => {
         setShowAdminProducto(false);
         setShowAdminVentas(false);
         setShowAdminUsuarios(false);
         setShowAdminCategorias(true);
-    }
+        setShowAdminCompras(false);
+        setShowAdminProveedores(false);
+    };
+
+    const handleShowAdminCompras = () => {
+        setShowAdminProducto(false);
+        setShowAdminVentas(false);
+        setShowAdminUsuarios(false);
+        setShowAdminCategorias(false);
+        setShowAdminCompras(true);
+        setShowAdminProveedores(false);
+    };
+
+    const handleShowAdminProveedores = () => {
+        setShowAdminProducto(false);
+        setShowAdminVentas(false);
+        setShowAdminUsuarios(false);
+        setShowAdminCategorias(false);
+        setShowAdminCompras(false);
+        setShowAdminProveedores(true);
+    };
 
     return (
         <main className="min-h-screen p-6 flex flex-col justify-items-center">
             <h1 className="text-4xl text-center p-2">Admin Page</h1>
-            <button className="w-1/6 justify-center font-semibold mb-10 bg-orange-200 px-3 py-3 rounded-md flex items-center hover:bg-orange-400 transition-all ease-in-out hover:-translate-y-1 hover:scale-110 duration-200 hover:text-white"
-            onClick={() => router.back()}>
+            <button
+                className="w-1/6 justify-center font-semibold mb-10 bg-orange-200 px-3 py-3 rounded-md flex items-center hover:bg-orange-400 transition-all ease-in-out hover:-translate-y-1 hover:scale-110 duration-200 hover:text-white"
+                onClick={() => router.back()}
+            >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 16 16"
@@ -136,11 +170,48 @@ export default function AdminPage() {
                     </svg>
                     Ventas
                 </button>
+                <button
+                    className="bg-gray-200 px-3 py-3 rounded-md flex items-center hover:bg-gray-400 transition-all ease-in-out hover:-translate-y-1 hover:scale-110 duration-200 hover:text-white"
+                    onClick={handleShowAdminCompras}
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        className="w-10 h-10 pr-3"
+                    >
+                        <path d="M3.375 4.5C2.339 4.5 1.5 5.34 1.5 6.375V13.5h12V6.375c0-1.036-.84-1.875-1.875-1.875h-8.25ZM13.5 15h-12v2.625c0 1.035.84 1.875 1.875 1.875h.375a3 3 0 1 1 6 0h3a.75.75 0 0 0 .75-.75V15Z" />
+                        <path d="M8.25 19.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0ZM15.75 6.75a.75.75 0 0 0-.75.75v11.25c0 .087.015.17.042.248a3 3 0 0 1 5.958.464c.853-.175 1.522-.935 1.464-1.883a18.659 18.659 0 0 0-3.732-10.104 1.837 1.837 0 0 0-1.47-.725H15.75Z" />
+                        <path d="M19.5 19.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0Z" />
+                    </svg>
+                    Compras
+                </button>
+                <button
+                    className="bg-gray-200 px-3 py-3 rounded-md flex items-center hover:bg-gray-400 transition-all ease-in-out hover:-translate-y-1 hover:scale-110 duration-200 hover:text-white"
+                    onClick={handleShowAdminProveedores}
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        className="w-10 h-10 pr-3"
+                    >
+                        <path
+                            fillRule="evenodd"
+                            d="M8.25 6.75a3.75 3.75 0 1 1 7.5 0 3.75 3.75 0 0 1-7.5 0ZM15.75 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM2.25 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM6.31 15.117A6.745 6.745 0 0 1 12 12a6.745 6.745 0 0 1 6.709 7.498.75.75 0 0 1-.372.568A12.696 12.696 0 0 1 12 21.75c-2.305 0-4.47-.612-6.337-1.684a.75.75 0 0 1-.372-.568 6.787 6.787 0 0 1 1.019-4.38Z"
+                            clipRule="evenodd"
+                        />
+                        <path d="M5.082 14.254a8.287 8.287 0 0 0-1.308 5.135 9.687 9.687 0 0 1-1.764-.44l-.115-.04a.563.563 0 0 1-.373-.487l-.01-.121a3.75 3.75 0 0 1 3.57-4.047ZM20.226 19.389a8.287 8.287 0 0 0-1.308-5.135 3.75 3.75 0 0 1 3.57 4.047l-.01.121a.563.563 0 0 1-.373.486l-.115.04c-.567.2-1.156.349-1.764.441Z" />
+                    </svg>
+                    Proveedores
+                </button>
             </div>
             {showAdminProducto && <AdminProducto />}
             {showAdminVentas && <AdminVentas />}
             {showAdminUsuarios && <AdminUsuarios />}
             {showAdminCategorias && <AdminCategorias />}
+            {showAdminCompras && <AdminCompras />}
+            {showAdminProveedores && <AdminProveedores />}
         </main>
     );
 }

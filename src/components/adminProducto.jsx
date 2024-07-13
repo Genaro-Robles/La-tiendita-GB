@@ -99,6 +99,25 @@ export default function AdminProducto() {
         }
     }
 
+    async function exportProducts(){
+        try{
+            const response = await axios.get("http://localhost:8080/product/export",{
+                responseType: 'blob'
+            });
+            const blob = new Blob([response.data], { type: 'application/vnd.ms-excel' });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'productos.xls');
+            document.body.appendChild(link);
+            link.click();
+            link.parentNode.removeChild(link);
+        }catch(error){
+            console.error("Error al exportar los productos: "+error);
+            throw error;
+        }
+    }
+
     const [data, setData] = useState([]);
     const [categorias, setCategorias] = useState([]);
     let [isOpen, setIsOpen] = useState(false);
@@ -155,7 +174,7 @@ export default function AdminProducto() {
                 </button>
                 <button
                     className="bg-green-200 px-3 py-3 mb-5 rounded-md flex items-center hover:bg-green-400 transition-all ease-in-out hover:-translate-y-1 hover:scale-110 duration-200 hover:text-white w-1/5 justify-center"
-                    onClick={() => alert("Reporte Excel")}
+                    onClick={() => exportProducts()}
                 >
                     <span className="text-xl font-semibold">Reporte Excel</span>
                     <span className="text-3xl font-semibold pl-4">

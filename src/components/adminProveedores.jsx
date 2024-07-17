@@ -177,11 +177,7 @@ export default function AdminProveedores() {
                 </PDFDownloadLink>
                 <Link
                     className="bg-green-200 px-3 py-3 mb-5 rounded-md flex items-center hover:bg-green-400 transition-all ease-in-out hover:-translate-y-1 hover:scale-110 duration-200 hover:text-white w-1/5 justify-center"
-<<<<<<< HEAD
                     href={"http://localhost:8080/provider/export"}
-=======
-                    onClick={() => exportProviders()}
->>>>>>> 8009a9ee67a8c94612ec02791629dbfb650d45e1
                 >
                     <span className="text-xl font-semibold">Reporte Excel</span>
                     <span className="text-3xl font-semibold pl-4">

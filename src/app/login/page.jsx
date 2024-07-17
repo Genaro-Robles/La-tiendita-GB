@@ -39,7 +39,7 @@ export default function Login() {
             if (result.isConfirmed) {
                 axios
                     .post("http://localhost:8080/user/auth", data, { headers })
-                    .then(function (response) {
+                    .then(async function (response) {
                         if (response.data[0] == undefined) {
                             Swal.fire({
                                 title: "Datos incorrectos!",
@@ -48,6 +48,7 @@ export default function Login() {
                             });
                             
                         } else {
+                            let info = await axios.post("api/users/login", response.data[0], { headers });
                             Swal.fire({
                                 title: "Session Iniciada!",
                                 text: "Haz iniciado session correctamente.",

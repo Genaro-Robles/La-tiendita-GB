@@ -6,17 +6,18 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import Link from "next/link";
 
+
 export default function ProcesarVenta() {
     const [subtotal, setSubtotal] = useState(0);
     const [igv, setIgv] = useState(0);
     const [total, setTotal] = useState(0);
-    const { removeFromCart, clearCart, carrito, setCarrito } = useCart();
+    const { removeFromCart, clearCart, carrito, setCarrito, user } = useCart();
     const headers = {
         "Content-Type": "application/json",
     };
 
     async function createVenta() {
-        let usuario = 1;
+        let usuario = user.id;
         let fechaPedido = new Date().toISOString().split("T")[0];
         let fechaEntrega = new Date().toISOString().split("T")[0];
 
@@ -46,8 +47,32 @@ export default function ProcesarVenta() {
                             { headers }
                         )
                         .then(function (response) {
+                            let detalles = carrito.map((producto) => ({
+                                sale: response.data,
+                                product: producto.id,
+                                cantidad: producto.quantity,
+                                importe:
+                                    Number(producto.precioUnitario) *
+                                    Number(producto.quantity),
+                            }));
+                            axios.post(
+                                "http://localhost:8080/sales_details",
+                                detalles,
+                                { headers }
+                            );
                             Swal.fire({
                                 title: "Compra exitosa!",
+                                confirmButtonText: `
+                                    <a class='btn-descargar' href='/boleta/${response.data}'>Descargar Boleta</a>
+                                `,
+                                cancelButtonText: `
+                                    <a class='btn-cancelar' href='javascript:void(0)'>Cerrar</a>
+                                `,
+                                cancelButtonColor: "#7066e0",
+                                confirmButtonColor: "#ef4444",
+                                buttonsStyling: false,
+                                showConfirmButton: true,
+                                showCancelButton: true,
                                 text: "Haz realizado tu compra con exito!!",
                                 icon: "success",
                             });
@@ -74,7 +99,8 @@ export default function ProcesarVenta() {
 
     const calcularTotales = (carrito) => {
         let totalito = carrito.reduce(
-            (acc, producto) => acc + producto.precioUnitario * producto.quantity,
+            (acc, producto) =>
+                acc + producto.precioUnitario * producto.quantity,
             0
         );
         let igvcito = totalito * 0.18;
@@ -83,7 +109,7 @@ export default function ProcesarVenta() {
     };
 
     useEffect(() => {
-        console.log(carrito)
+        console.log(carrito);
     }, []);
 
     useEffect(() => {
@@ -107,7 +133,8 @@ export default function ProcesarVenta() {
                         type="text"
                         id="client"
                         className="border-2 border-gray-200 bg-gray-200 rounded-md ml-2 px-3 text-sm w-1/2 py-2"
-                        defaultValue={"Genaro"}
+                        defaultValue={user.name + " " + user.lastname}
+                        readOnly={user == "nada"}
                     />
                 </div>
                 <div className="w-full flex flex-row justify-center py-2">
@@ -118,7 +145,8 @@ export default function ProcesarVenta() {
                         type="text"
                         id="correo"
                         className="border-2 border-gray-200 bg-gray-200 rounded-md ml-2 w-1/2 px-3 text-sm py-2"
-                        defaultValue={"grq13rexar@gmail.com"}
+                        defaultValue={user.correo}
+                        readOnly={user == "nada"}
                     />
                 </div>
                 <div className="w-full flex flex-row justify-center py-2">
@@ -148,6 +176,7 @@ export default function ProcesarVenta() {
                         type="date"
                         id="fecha_entrega"
                         className="border-2 border-gray-200 bg-gray-200 rounded-md ml-2 w-1/2 px-3 text-sm py-2"
+                        readOnly={user == "nada"}
                     />
                 </div>
                 <table className="w-full border-2 border-gray-200 rounded-md mt-5 mb-10">
@@ -254,12 +283,14 @@ export default function ProcesarVenta() {
                     >
                         Seguir Comprando
                     </Link>
+                    {user != "nada" &&
                     <button
                         className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded"
                         onClick={() => createVenta()}
                     >
                         Realizar Compra
                     </button>
+                    }
                 </div>
             </div>
         </div>

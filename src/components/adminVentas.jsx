@@ -12,6 +12,10 @@ import {
 } from "@headlessui/react";
 import { useForm } from "react-hook-form";
 import UpdateProducto from "@/components/updateProducto";
+import Link from "next/link";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import PDF from "@/components/reportesVentas";
+import VerDetallesVentas from "@/components/verDetallesVentas";
 
 export default function AdminVentas() {
     const {
@@ -27,10 +31,6 @@ export default function AdminVentas() {
 
     async function getVentas() {
         const response = await axios.get("http://localhost:8080/sales");
-        return response.data;
-    }
-    async function getDetalleVentas(sale) {
-        const response = await axios.get("http://localhost:8080/salesdetails/sales/"+sale);
         return response.data;
     }
 
@@ -70,34 +70,56 @@ export default function AdminVentas() {
         });
     }, []);
 
+
+
     return (
         <>
             <div className="flex justify-start space-x-5">
-                <button
+                <PDFDownloadLink
+                    document={<PDF />}
+                    fileName="ReporteVentas.pdf"
                     className="bg-red-200 px-3 py-3 mb-5 rounded-md flex items-center hover:bg-red-400 transition-all ease-in-out hover:-translate-y-1 hover:scale-110 duration-200 hover:text-white w-1/5 justify-center"
-                    onClick={() => alert("Reporte PDF")}
                 >
-                    <span className="text-xl font-semibold">Reporte PDF</span>
-                    <span className="text-3xl font-semibold pl-4">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={1.5}
-                            stroke="currentColor"
-                            className="size-6"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"
-                            />
-                        </svg>
-                    </span>
-                </button>
-                <button
+                    {({ loading, url, error, blob }) =>
+                        loading ? (
+                            <button className="flex items-center">
+                                <span className="text-xl font-semibold">
+                                    Cargando...
+                                </span>
+                                <div className="flex flex-row gap-2">
+                                    <div className="w-1 h-1 rounded-full bg-gray-700 animate-bounce"></div>
+                                    <div className="w-1 h-1 rounded-full bg-gray-700 animate-bounce [animation-delay:-.3s]"></div>
+                                    <div className="w-1 h-1 rounded-full bg-gray-700 animate-bounce [animation-delay:-.5s]"></div>
+                                </div>
+                            </button>
+                        ) : (
+                            <button className="flex items-center">
+                                <span className="text-xl font-semibold">
+                                    Reporte PDF
+                                </span>
+                                <span className="text-3xl font-semibold pl-4">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth={1.5}
+                                        stroke="currentColor"
+                                        className="size-6"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"
+                                        />
+                                    </svg>
+                                </span>
+                            </button>
+                        )
+                    }
+                </PDFDownloadLink>
+                <Link
                     className="bg-green-200 px-3 py-3 mb-5 rounded-md flex items-center hover:bg-green-400 transition-all ease-in-out hover:-translate-y-1 hover:scale-110 duration-200 hover:text-white w-1/5 justify-center"
-                    onClick={() => alert("Reporte Excel")}
+                    href={"http://localhost:8080/sales/export"}
                 >
                     <span className="text-xl font-semibold">Reporte Excel</span>
                     <span className="text-3xl font-semibold pl-4">
@@ -116,7 +138,7 @@ export default function AdminVentas() {
                             />
                         </svg>
                     </span>
-                </button>
+                </Link>
             </div>
             <table className="table-fixed">
                 <thead className="text-left bg-orange-400 text-gray-700">
@@ -160,25 +182,7 @@ export default function AdminVentas() {
                             <td className="px-2">S/. {ventas.igv}</td>
                             <td className="px-2">S/. {ventas.total}</td>
                             <td className="px-2">
-                                <button
-                                    className="bg-yellow-500 hover:bg-yellow-800 px-2 py-2 text-white rounded-lg"
-                                    title="Ver Detalles"
-                                    onClick={() => getDetalleVentas(ventas.id)}
-                                >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24"
-                                        fill="currentColor"
-                                        className="w-5 h-5"
-                                    >
-                                        <path
-                                            fillRule="evenodd"
-                                            d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0 0 16.5 9h-1.875a1.875 1.875 0 0 1-1.875-1.875V5.25A3.75 3.75 0 0 0 9 1.5H5.625ZM7.5 15a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 7.5 15Zm.75 2.25a.75.75 0 0 0 0 1.5H12a.75.75 0 0 0 0-1.5H8.25Z"
-                                            clipRule="evenodd"
-                                        />
-                                        <path d="M12.971 1.816A5.23 5.23 0 0 1 14.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 0 1 3.434 1.279 9.768 9.768 0 0 0-6.963-6.963Z" />
-                                    </svg>
-                                </button>
+                                <VerDetallesVentas id={ventas.id} />
                             </td>
                             <td className="px-2">
                                 {ventas.status ? (

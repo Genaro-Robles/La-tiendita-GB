@@ -5,7 +5,6 @@ import AdminUsuarios from "@/components/adminUsuarios";
 import AdminCategorias from "@/components/adminCategorias";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { set } from "react-hook-form";
 import AdminCompras from "@/components/adminCompras";
 import AdminProveedores from "@/components/adminProveedores";
 
@@ -91,13 +90,45 @@ export default function AdminPage() {
                 <span className="pl-3">Regresar al inicio</span>
             </button>
             <div className="flex w-full space-x-5 pb-20">
-                <div className="bg-red-600 h-36 w-1/4">Ventas del mes</div>
-                <div className="bg-green-600 h-36 w-1/4">Ventas totales</div>
-                <div className="bg-blue-600 h-36 w-1/4">
-                    Producto mas vendido
+                <div className="bg-red-600 h-36 w-1/4 p-5 rounded-lg">
+                    <div className="bg-red-500 rounded-lg w-full h-full text-center flex flex-col items-center justify-center text-white">
+                        <span className="w-full text-3xl font-bold">
+                            S/. 43215.58
+                        </span>
+                        <p className="text-2xl font-bold text-gray-900">
+                            Ventas del mes
+                        </p>
+                    </div>
                 </div>
-                <div className="bg-pink-600 h-36 w-1/4">
-                    Cliente mas recurrente
+                <div className="bg-green-600 h-36 w-1/4 p-5 rounded-lg">
+                    <div className="bg-green-500 rounded-lg w-full h-full text-center flex flex-col items-center justify-center text-white">
+                        <span className="w-full text-3xl font-bold">
+                            S/. 43215.58
+                        </span>
+                        <p className="text-2xl font-bold text-gray-900">
+                            Ventas totales
+                        </p>
+                    </div>
+                </div>
+                <div className="bg-blue-600 h-36 w-1/4 p-5 rounded-lg">
+                    <div className="bg-blue-500 rounded-lg w-full h-full text-center flex flex-col items-center justify-center text-white">
+                        <span className="w-full text-2xl font-bold text-wrap">
+                            KUMARA K552 BLACK RAINBOW
+                        </span>
+                        <p className="text-xl font-bold text-gray-900">
+                            Producto más vendido
+                        </p>
+                    </div>
+                </div>
+                <div className="bg-pink-600 h-36 w-1/4 p-5 rounded-lg">
+                    <div className="bg-pink-500 rounded-lg w-full h-full text-center flex flex-col items-center justify-center text-white">
+                        <span className="w-full text-2xl font-bold">
+                            Bill Trujillo Fierro
+                        </span>
+                        <p className="text-xl font-bold text-gray-900">
+                            Cliente más recurrente
+                        </p>
+                    </div>
                 </div>
             </div>
             <div className="flex w-full space-x-5 pb-10 justify-center">

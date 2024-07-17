@@ -3,10 +3,12 @@ import Image from "next/image";
 import logo from "@/images/logo-pccomponentes.svg";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useCart } from "@/app/hooks/useCart";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
+import VerPerfil from "@/components/verPerfil";
 
 function CartItem({ product, removeFromCart }) {
     return (
@@ -52,6 +54,9 @@ function CartItem({ product, removeFromCart }) {
 }
 
 export default function Header() {
+    const { removeFromCart, clearCart, carrito, user, setUser } = useCart();
+    const [mostrarCarrito, setMostrarCarrito] = useState(false);
+    const pathname = usePathname();
     const headers = {
         "Content-Type": "application/json",
     };
@@ -103,7 +108,7 @@ export default function Header() {
                                 icon: "success",
                             });
                         });
-                        clearCart();
+                    clearCart();
                 } else {
                     Swal.fire({
                         title: "Compra cancelada!",
@@ -117,9 +122,26 @@ export default function Header() {
         }
     }
 
-    const { removeFromCart, clearCart, carrito } = useCart();
-    const [mostrarCarrito, setMostrarCarrito] = useState(false);
-    const pathname = usePathname();
+    async function logout() {
+        try {
+            await axios.delete("api/users/login", { headers });
+            setUser("nada");
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async function obtenerUsuario() {
+        try {
+            const response = await axios.get("api/users/login", { headers });
+            await setUser(response.data);
+        } catch (error) {}
+    }
+
+    useEffect(() => {
+        if (user != "nada") obtenerUsuario();
+    }, []);
+
     return pathname === "/login" ||
         pathname === "/register" ||
         pathname.includes("/admin") ? null : (
@@ -140,20 +162,101 @@ export default function Header() {
                 <nav className="">
                     <ul className="flex space-x-4">
                         <li className="flex">
-                            <Link
-                                href="/login"
-                                className="hover:bg-gray-100 flex space-x-2 py-3 px-2 rounded-md transition-all ease-in-out duration-500"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 24 24"
-                                    enableBackground="new 0 0 24 24"
-                                    className="w-6 h-6"
+                            {user != "nada" ? (
+                                <div>
+                                    <Menu>
+                                        <MenuButton className="hover:bg-gray-100 flex space-x-3 py-3 px-2 rounded-md transition-all ease-in-out duration-500">
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                strokeWidth={1.5}
+                                                stroke="currentColor"
+                                                className="size-6"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
+                                                />
+                                            </svg>
+                                            {<span>{user.name}</span>}
+                                        </MenuButton>
+
+                                        <MenuItems
+                                            transition
+                                            anchor="bottom end"
+                                            className="w-52 rounded-xl backdrop-blur-sm bg-black/45 p-1 text-sm/6 text-white transition duration-100 ease-out [--anchor-gap:var(--spacing-1)] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
+                                        >
+                                            <MenuItem>
+                                                <VerPerfil info={user} />
+                                            </MenuItem>
+                                            {user.rol == "admin" && (
+                                                <MenuItem>
+                                                    <Link
+                                                        href={"/admin"}
+                                                        className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-white/10"
+                                                    >
+                                                        <svg
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            fill="none"
+                                                            viewBox="0 0 24 24"
+                                                            strokeWidth={1.5}
+                                                            stroke="currentColor"
+                                                            className="size-6"
+                                                        >
+                                                            <path
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                                d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z"
+                                                            />
+                                                        </svg>
+                                                        Admin
+                                                    </Link>
+                                                </MenuItem>
+                                            )}
+                                            <div className="my-1 h-px bg-white/5" />
+                                            <MenuItem>
+                                                <button
+                                                    className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-white/10"
+                                                    onClick={() => logout()}
+                                                >
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        fill="none"
+                                                        viewBox="0 0 24 24"
+                                                        strokeWidth={1.5}
+                                                        stroke="currentColor"
+                                                        className="size-6"
+                                                    >
+                                                        <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
+                                                        />
+                                                    </svg>
+                                                    Cerrar Sesión
+                                                </button>
+                                            </MenuItem>
+                                        </MenuItems>
+                                    </Menu>
+                                </div>
+                            ) : (
+                                <Link
+                                    href="/login"
+                                    className="hover:bg-gray-100 flex space-x-2 py-3 px-2 rounded-md transition-all ease-in-out duration-500"
                                 >
-                                    <path d="M12 12c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM20 20h-16v-1c0-3.5 3.3-6 8-6s8 2.5 8 6v1zm-13.8-2h11.7c-.6-1.8-2.8-3-5.8-3s-5.3 1.2-5.9 3z"></path>
-                                </svg>
-                                <span>Mi cuenta</span>
-                            </Link>
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 24 24"
+                                        enableBackground="new 0 0 24 24"
+                                        className="w-6 h-6"
+                                    >
+                                        <path d="M12 12c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM20 20h-16v-1c0-3.5 3.3-6 8-6s8 2.5 8 6v1zm-13.8-2h11.7c-.6-1.8-2.8-3-5.8-3s-5.3 1.2-5.9 3z"></path>
+                                    </svg>
+                                    <span>Mi cuenta</span>
+                                </Link>
+                            )}
                         </li>
                         <li>
                             <button
@@ -195,7 +298,8 @@ export default function Header() {
                         />
                     ))}
                     <div className="flex flex-col items-center">
-                        <Link href="/procesarventa"
+                        <Link
+                            href="/procesarventa"
                             className="bg-orange-500 text-white py-2 rounded-md hover:bg-orange-600 w-3/4 my-3 text-center"
                         >
                             Realizar compra

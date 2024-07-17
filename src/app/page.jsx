@@ -10,6 +10,7 @@ import {
     Transition,
 } from "@headlessui/react";
 
+
 export default function Home() {
     const [productos, setProductos] = useState([]);
     const [categorias, setCategorias] = useState([]);
@@ -70,7 +71,7 @@ export default function Home() {
                     >
                         <MenuItems
                             anchor="bottom end"
-                            className="w-52 origin-top-right rounded-xl border border-back/35 backdrop-blur-sm bg-black/35 p-1 text-sm/6 text-white [--anchor-gap:var(--spacing-1)] focus:outline-none"
+                            className="w-52 origin-top-right rounded-xl border backdrop-blur-sm bg-black/35 p-1 text-sm/6 text-white [--anchor-gap:var(--spacing-1)] focus:outline-none"
                         >
                             <MenuItem>
                                 <button
@@ -81,9 +82,8 @@ export default function Home() {
                                 </button>
                             </MenuItem>
                             {categorias.map((categoria, index) => (
-                                <MenuItem>
+                                <MenuItem key={index}>
                                     <button
-                                        key={index}
                                         value={categoria.id}
                                         className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-white/20"
                                         onClick={() =>
@@ -98,10 +98,10 @@ export default function Home() {
                     </Transition>
                 </Menu>
             </div>
-            
+
             <main className="min-h-full p-6 grid grid-cols-4 justify-items-center">
                 {productos.map((producto, index) => (
-                    <Producto key={index} data={producto} /> // Usar un 'key' único para cada elemento
+                    <Producto key={index} data={producto} />
                 ))}
             </main>
         </div>
